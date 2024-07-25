@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Vessel</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-content">
+            <h1>Vessel</h1>
+            <a href="/" class="link-button">Home</a>
+            <a href="/about" class="link-button">About</a>
+            <a href="/login" class="link-button">Login</a>
+            <a href="/register" class="link-button">Register</a>
+        </div>
+    </div>
+    
+    <div class="auth-container">
+        <h1>Login</h1>
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <a href="/register">Don't have an account? Register here</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Vessel. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,335 @@
+/* General Styling */
+body {
+  background-image: url('cool-background.png');
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-family: 'Raleway', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Navbar Styling */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navbar h1 {
+  margin: 0;
+}
+
+.link-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #6200ea;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.link-button:hover {
+  background-color: #3700b3;
+  transform: scale(1.05);
+}
+
+/* Main Container Styling */
+.container {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 80px;
+  /* Margin from the top */
+  margin-bottom: 100px;
+  /* Increased margin-bottom to fit the footer */
+}
+
+.container:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Heading Styling */
+h1 {
+  margin-bottom: 20px;
+  font-size: 2.5em;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Form and File Input */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+/* Drop Zone Styling */
+.drop-zone {
+  border: 2px solid #6200ea;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  margin: 10px 0;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+  background-color: rgba(98, 0, 234, 0.05);
+  cursor: pointer;
+}
+
+.drop-zone-hover {
+  border-color: #3700b3;
+  background-color: rgba(98, 0, 234, 0.1);
+  animation: borderAnimation 2s infinite;
+}
+
+@keyframes borderAnimation {
+  0% {
+    border-color: #6200ea;
+  }
+
+  50% {
+    border-color: #3700b3;
+  }
+
+  100% {
+    border-color: #6200ea;
+  }
+}
+
+/* Preview Styling */
+#previewContainer {
+  display: none;
+  width: 100%;
+  max-width: 500px;
+  margin-top: 20px;
+  overflow: visible;
+}
+
+#preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+}
+
+#preview img,
+#preview video,
+#preview audio,
+#preview iframe,
+#preview code {
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+  margin: auto;
+  transition: transform 0.3s ease;
+}
+
+#preview img:hover,
+#preview video:hover,
+#preview audio:hover,
+#preview iframe:hover,
+#preview code:hover {
+  transform: scale(1.05);
+}
+
+/* File URL Container */
+#fileUrlContainer {
+  margin-top: 10px;
+  display: none;
+  /* Hide initially */
+  align-items: center;
+  width: 100%;
+  display: flex;
+}
+
+#fileUrl {
+  width: calc(100% - 80px);
+  padding: 10px;
+  border: none;
+  border-radius: 5px 0 0 5px;
+  margin-right: -1px;
+  box-sizing: border-box;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#copyButton {
+  padding: 10px;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  background-color: #3700b3;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-sizing: border-box;
+  height: 100%;
+  width: 80px;
+  /* Ensure the button width is consistent */
+}
+
+#copyButton:hover {
+  background-color: #6200ea;
+  transform: scale(1.05);
+}
+
+/* Metadata Container */
+.metadata-container {
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  color: #fff;
+  display: none;
+  /* Hide initially */
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow: auto;
+}
+
+.metadata-container h2 {
+  margin-top: 0;
+}
+
+.metadata-item {
+  margin-bottom: 10px;
+}
+
+.metadata-item span {
+  font-weight: bold;
+}
+
+/* Footer Styling */
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Login & Register Page Styling */
+.auth-container {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 80px;
+  /* Margin from the top */
+}
+
+.auth-container:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.auth-container h1 {
+  margin-bottom: 20px;
+  font-size: 2em;
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-container input[type="text"],
+.auth-container input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.auth-container button {
+  padding: 10px 20px;
+  background-color: #6200ea;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.auth-container button:hover {
+  background-color: #3700b3;
+  transform: scale(1.05);
+}
+
+.auth-container a {
+  color: #6200ea;
+  text-decoration: none;
+  margin-top: 10px;
+  display: block;
+}
+
+.auth-container a:hover {
+  text-decoration: underline;
+}

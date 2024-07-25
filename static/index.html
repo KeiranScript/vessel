@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Vessel</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-content">
+            <h1>Vessel</h1>
+            <a href="/" class="link-button">Home</a>
+            <a href="/about" class="link-button">About</a>
+            <a href="/login" class="link-button">Login</a>
+            <a href="/register" class="link-button">Register</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Upload Your Files</h1>
+        <form id="uploadForm">
+        <input type="file" id="fileInput" name="file" multiple>
+        <div id="dropZone" class="drop-zone">
+            Drag & Drop files here or click to select
+        </div>
+        <div id="previewContainer">
+            <div id="preview"></div>
+        </div>
+        <div id="fileUrlContainer" style="display: none;">
+            <input type="text" id="fileUrl" readonly>
+            <button type="button" id="copyButton">Copy URL</button>
+        </div>
+        <div id="metadataContainer" class="metadata-container" style="display: none;">
+            <h2>File Metadata</h2>
+            <div class="metadata-item" id="metadataTitle"></div>
+            <div class="metadata-item" id="metadataSize"></div>
+            <div class="metadata-item" id="metadataModified"></div>
+            <div class="metadata-item" id="metadataUploadDate"></div>
+            <div class="metadata-item" id="metadataUser"></div>
+        </div>
+        </form>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Vessel. All rights reserved.</p>
+    </footer>
+
+    <script src="static/js/script.js"></script>
+</body>
+</html>
+
