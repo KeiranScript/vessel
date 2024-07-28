@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - <%= title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="glow-color-1">
+  <!-- Background Video -->
+  <video id="myVideo" autoplay muted loop>
+    <source src="/background.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/gallery">Gallery</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/logout">Logout</a></li>
+      <li><br></li>
+      <li><a href="https://bio.kuuichi.xyz">Bio</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container">
+    <h1 class="page-title">About Us</h1>
+    <div class="about-content">
+      <section class="site-info">
+        <h2>Site Information</h2>
+        <p><strong>Total Uploads:</strong> <%= totalUploads %></p>
+        <p><strong>Release Date:</strong> <%= releaseDate %></p>
+        <p><strong>Registered Users:</strong> <%= registeredUsers %></p>
+        <p><strong>Total Storage Used:</strong> <%= totalStorage %> GB</p>
+      </section>
+      <section class="site-description">
+        <h2>MOTD</h2>
+      <div id="motd-container">
+        <p id="motd">Loading MOTD...</p>
+      </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
+

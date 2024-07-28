@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="glow-color-1">
+  <!-- Background Video -->
+  <video id="myVideo" autoplay muted loop>
+    <source src="/background.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Intro Screen -->
+  <div id="intro-screen">
+    <button id="enter-button">Enter</button>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <ul>
+      <li><a href="/upload">Upload</a></li>
+      <li><a href="/gallery">Gallery</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/logout">Logout</a></li>
+      <li><br></li>
+      <li><a href="#bio">Bio</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Bio Card -->
+    <div class="bio-card">
+      <img src="<%= profileImage %>" alt="Profile Image" class="profile-image">
+      <h1 class="name"><%= name %></h1>
+      <p class="description"><%= description %></p>
+    </div>
+
+    <!-- Upload Form -->
+    <div id="upload-form" style="display: none;">
+      <input type="file" name="file" id="file-input" class="hidden-file-input" required>
+      <button type="button" id="select-file-button">Select File</button>
+    </div>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/gallery.js" defer></script>
+</head>
+<body>
+  <div class="navbar">
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/gallery">Gallery</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/logout">Logout</a></li>
+      <li><br></li>
+      <li><a href="https://bio.kuuichi.xyz/">Bio</a></li>
+    </ul>
+  </div>
+
+  <div class="container">
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="Search files...">
+    </div>
+    <div class="scrollable-gallery">
+      <div class="gallery-container">
+        <% files.forEach(file => { 
+          const filename = file.url.split('/').pop(); // Extract the filename from the URL
+        %>
+          <div class="gallery-item">
+            <div class="file-preview">
+              <% if (file.type.startsWith('image/')) { %>
+                <img src="<%= file.url %>" alt="<%= filename %>" class="gallery-preview">
+              <% } else if (file.type.startsWith('video/')) { %>
+                <video controls class="gallery-preview">
+                  <source src="<%= file.url %>" type="<%= file.type %>">
+                  Your browser does not support the video tag.
+                </video>
+              <% } else if (file.type.startsWith('audio/')) { %>
+                <audio controls class="gallery-preview">
+                  <source src="<%= file.url %>" type="<%= file.type %>">
+                  Your browser does not support the audio element.
+                </audio>
+              <% } else if (file.type.startsWith('text/')) { %>
+                <iframe src="<%= file.url %>" class="gallery-preview"></iframe>
+              <% } else { %>
+                <p>Preview not available</p>
+              <% } %>
+            </div>
+            <div class="file-info">
+              <p class="file-url-container"><%= filename %></p>
+              <button class="copy-url-button" data-url="<%= file.url %>">Copy URL</button>
+              <button class="delete-button" data-url="<%= file.url %>">Delete</button>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
