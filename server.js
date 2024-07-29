@@ -2,11 +2,12 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const passport = require('passport');
-const DiscordStrategy = require('passport-discord').Strategy;
-const multer = require('multer');
-const fs = require('fs');
-const mime = require('mime-types');
 const crypto = require('crypto');
+const DiscordStrategy = require('passport-discord').Strategy;
+const fs = require('fs');
+
+// Import API routes
+const apiRoutes = require('./api');
 
 // Initialize Express
 const app = express();
@@ -21,6 +22,27 @@ app.use(session({
     maxAge: 7 * 24 * 60 * 60 * 1000 // Cookie expires in a week
   }
 }));
+
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated && req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/login');
+}
+
+const apiKeyTimestamps = new Map(); // Store last regeneration timestamps
+
+function canRegenerateApiKey(userId) {
+    const lastTimestamp = apiKeyTimestamps.get(userId);
+    const currentTime = Date.now();
+    const sixHoursInMs = 6 * 60 * 60 * 1000;
+
+    if (!lastTimestamp || (currentTime - lastTimestamp) >= sixHoursInMs) {
+        apiKeyTimestamps.set(userId, currentTime);
+        return true;
+    }
+    return false;
+}
 
 // Initialize Passport
 app.use(passport.initialize());
@@ -55,28 +77,10 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const userId = req.user ? req.user.id : 'guest';
-    const dir = path.join(__dirname, 'uploads', userId);
+// Use API routes
+app.use('/api', apiRoutes);
 
-    // Ensure user directory exists
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
-    }
-
-    cb(null, dir);
-  },
-  filename: (req, file, cb) => {
-    const randomName = crypto.randomBytes(5).toString('hex'); // 5 bytes * 2 hex chars/byte = 10 chars
-    cb(null, randomName + path.extname(file.originalname)); // Append random string to filename
-  }
-});
-
-const upload = multer({ storage });
-
-// Route for the home page
+// Other routes
 app.get('/', (req, res) => {
   if (!req.isAuthenticated()) {
     // Redirect to Discord login if not authenticated
@@ -127,60 +131,6 @@ app.get('/logout', (req, res) => {
   });
 });
 
-// Upload route
-app.post('/upload', upload.single('file'), (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).send('Unauthorized');
-  }
-
-  const file = req.file;
-  if (file) {
-    const userId = req.user.id;
-    const userUploadsDir = path.join(__dirname, 'uploads', userId);
-
-    // Get the updated file count
-    fs.readdir(userUploadsDir, (err, files) => {
-      if (err) return res.status(500).send('Error reading user uploads');
-
-      const fileCount = files.filter(file => fs.statSync(path.join(userUploadsDir, file)).isFile()).length;
-
-      res.json({ 
-        filename: file.filename,
-        url: `${req.protocol}://${req.get('host')}/uploads/${userId}/${file.filename}`,
-        mimetype: file.mimetype,
-        fileCount: fileCount // Send the updated file count
-      });
-    });
-  } else {
-    res.status(400).send('No file uploaded');
-  }
-});
-
-// Delete route
-app.post('/delete', (req, res) => {
-  if (!req.isAuthenticated()) {
-    return res.status(401).send('Unauthorized');
-  }
-
-  const { url } = req.body; // Extract the URL from the request body
-
-  if (!url) {
-    return res.status(400).send('Invalid request');
-  }
-
-  // Extract file name from URL
-  const fileName = path.basename(url);
-  const filePath = path.join(__dirname, 'uploads', req.user.id, fileName);
-
-  fs.unlink(filePath, err => {
-    if (err) {
-      console.error('Error deleting file:', err);
-      return res.status(500).send('Error deleting file');
-    }
-    res.sendStatus(200);
-  });
-});
-
 app.get('/gallery', (req, res) => {
   if (!req.isAuthenticated()) {
     return res.redirect('/auth/discord');
@@ -223,6 +173,8 @@ app.get('/about', (req, res) => {
     if (err) return res.status(500).send('Error reading uploads directory');
 
     registeredUsers = usersDirs.length;
+    let processedDirs = 0;
+
     usersDirs.forEach(userDir => {
       const userDirPath = path.join(uploadsDir, userDir);
       fs.readdir(userDirPath, (err, files) => {
@@ -234,7 +186,8 @@ app.get('/about', (req, res) => {
         });
 
         // Send response once all directories have been processed
-        if (userDir === usersDirs[usersDirs.length - 1]) {
+        processedDirs++;
+        if (processedDirs === usersDirs.length) {
           res.render('about', {
             title: 'Image Host',
             totalUploads: totalUploads,
@@ -246,6 +199,46 @@ app.get('/about', (req, res) => {
       });
     });
   });
+});
+
+app.get('/dashboard', ensureAuthenticated, (req, res) => {
+    const userId = req.user.id;
+    const userUploadsDir = path.join(__dirname, 'uploads', userId);
+
+    fs.readdir(userUploadsDir, (err, files) => {
+        if (err) {
+            console.error('Error reading user uploads:', err);
+            return res.status(500).send('Error reading uploads');
+        }
+
+        // Filter out directories and count files
+        const fileCount = files.filter(file => fs.statSync(path.join(userUploadsDir, file)).isFile()).length;
+
+        // Generate a dummy API key for example purposes (you should implement actual key generation and storage)
+        const apiKey = '12345-abcde';
+
+        res.render('dashboard', {
+            title: 'Dashboard',
+            profileImage: `https://cdn.discordapp.com/avatars/${userId}/${req.user.avatar}.png`,
+            name: req.user.username,
+            description: `${fileCount} uploads`,
+            apiKey: apiKey
+        });
+    });
+});
+
+app.post('/api/generate-api-key', ensureAuthenticated, (req, res) => {
+    const userId = req.user.id;
+
+    if (canRegenerateApiKey(userId)) {
+        const apiKey = crypto.randomBytes(16).toString('hex');
+
+        // Save the generated API key to your database or user session as needed
+
+        res.json({ apiKey: apiKey });
+    } else {
+        res.status(429).json({ message: 'API key regeneration is allowed once every 6 hours.' });
+    }
 });
 
 app.get('/motd', (req, res) => {
@@ -265,3 +258,4 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
